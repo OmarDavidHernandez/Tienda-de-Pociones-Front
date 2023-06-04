@@ -23,9 +23,26 @@ const Pagina = () => {
     const [classLoad,setClassLoad] = useState('');
     const [classTable,setClassTable] = useState('d-none');
     const [ingredientes,setIngredientes] = useState([]);
+    const [ingres,setIngres] = useState([]);
+    
+      const actualizaChecks = (c) => {
+        let estado = c.target.checked;
+        let elid = c.target.id.split('_');
+        let checados = ingres;
+        console.log(estado);
+        if(estado ===true){
+            checados = checados.filter(i => i != elid[1]);
+            checados.push(elid[1]);
+        }
+        else{
+            checados = checados.filter(i => i != elid[1]);
+        }
+        setIngres(checados);
+        console.log(ingres);
+      }
     useEffect(()=>{
-      obtenerPociones();
       obtenerIngredientes();
+      obtenerPociones();
     },[]);
   
     const obtenerPociones = async() =>{
@@ -38,6 +55,7 @@ const Pagina = () => {
     const obtenerIngredientes = async() =>{
         const res = await enviarPeticion('GET','','/ingredientes','');
         setIngredientes(res.data);
+        
       }
     const laimagen = (img) =>{
         console.log(img);
@@ -60,6 +78,13 @@ const Pagina = () => {
             setCantidad(datos.cantidad);
             setCategoria(datos.categoria);
             setImagen(undefined);
+            let losingres = datos.ingredientes.split(',');
+            console.log(losingres);
+            let ing = [];
+            losingres.forEach(ele => {
+                ing.push(ele);
+            });
+            setIngres(losingres);
         }
     }
     const eliminar = (id,nombre) =>{
@@ -73,12 +98,13 @@ const Pagina = () => {
         setCantidad('');
         setCategoria('');
         setImagen(undefined);
+        setIngres([]);
     }
   return (
     <>
     <Row className='mt-0'>
         <Col lg={{span:10, offset:1}}>
-            <Tabla pociones={pociones} tempo={temporal} setTemporal={setTemporal} modal={abrirModal} confirmar={eliminar} classLoad={classLoad} classTable={classTable}></Tabla>
+            <Tabla pociones={pociones} tempo={temporal} setTemporal={setTemporal} modal={abrirModal} confirmar={eliminar} classLoad={classLoad} classTable={classTable}  ingredientes={ingredientes}></Tabla>
         </Col>
     </Row>
     <Row className='mt-3 mb-3'>
@@ -90,7 +116,8 @@ const Pagina = () => {
     nombre={nombre} setNombre={setNombre} descripcion={descripcion} setDescripcion={setDescripcion}
     precio={precio} setPrecio={setPrecio} cantidad={cantidad} setCantidad={setCantidad}
      imagen={imagen} laimagen={laimagen} categoria={categoria} setCategoria= {setCategoria} 
-     refrescar={obtenerPociones} limpiar = {limpiar} ingredientes={ingredientes}>
+     refrescar={obtenerPociones} limpiar = {limpiar} ingredientes={ingredientes}
+     actualizaChecks={actualizaChecks} ingres = {ingres}>
     </Formulario>
     </>
     

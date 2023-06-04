@@ -1,4 +1,4 @@
-import {useState,useRef} from 'react';
+import {useRef} from 'react';
 import { enviarPeticion } from '../funciones';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -21,7 +21,7 @@ const Formulario = (parametros) => {
         form.append('imagen',parametros.imagen);
         form.append('categoria',parametros.categoria);
         form.append('id',parametros.id);*/
-        let form = {nombre:parametros.nombre,descripcion:parametros.descripcion,precio:parametros.precio,cantidad:parametros.cantidad,imagen:parametros.imagen,categoria:parametros.categoria,id:parametros.id};
+        let form = {nombre:parametros.nombre,descripcion:parametros.descripcion,precio:parametros.precio,cantidad:parametros.cantidad,imagen:parametros.imagen,categoria:parametros.categoria,id:parametros.id,ingredientes:parametros.ingres};
         const res = await enviarPeticion(metodo,form,url,'');
         if(metodo == 'PUT' && res.status == true){
             btnCerrar.current.click();
@@ -68,7 +68,7 @@ const Formulario = (parametros) => {
                     <InputGroup.Text >
                         <i className="fa-solid fa-image"></i>
                     </InputGroup.Text>
-                    <Form.Control onChange={(e)=> parametros.laimagen(e.target.files[0])} type="file" required accept="image/jpeg, image/png"/>
+                    <Form.Control onChange={(e)=> parametros.laimagen(e.target.files[0])} type="file" accept="image/jpeg, image/png"/>
                 </InputGroup>
                 <InputGroup className="mb-3">
                     <InputGroup.Text >
@@ -77,13 +77,15 @@ const Formulario = (parametros) => {
                     <Form.Control value={parametros.categoria} onChange={(e) => parametros.setCategoria(e.target.value)} type="text" placeholder="Categoría" required/>
                 </InputGroup>
                 <hr></hr>
-                <p><i class="fa-solid fa-hand-sparkles"></i> <b>Ingredientes de la Poción:</b></p>
+                <i className="fa-solid fa-hand-sparkles"></i> <b>Ingredientes de la Poción:</b><br></br>
                 <InputGroup className="mb-3">
                 {
                 parametros.ingredientes.map( (row,i)=>(
                     <Form.Check key={row.id}
-                        type="switch"name='ingres[]'className='me-2'
-                        id={'ing_'+row.id} label={row.nombre}
+                    type="switch"name='ingres[]'className='me-2'
+                    id={'ing_'+row.id} label={row.nombre} 
+                    
+                    onChange={(e) => parametros.actualizaChecks(e)}
                     />
                 ))}
                 </InputGroup>

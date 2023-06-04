@@ -28,6 +28,17 @@ function Tabla(parametros) {
       parametros.setTemporal(parametros.pociones);
     }
   }
+  const filtrarIngredientres = (ingres) =>{
+    let listaing = '';
+    if(ingres != null){  
+      let arrayList = ingres.split(',');
+      arrayList.forEach(ele => {
+        let prov = parametros.ingredientes.filter(i => i.id == ele);
+        listaing += '<br>  -  '+prov[0].nombre;
+      });
+    }
+    return listaing;
+  }
   return (
     <>
     <Card border="white" id='pociones'>
@@ -51,12 +62,14 @@ function Tabla(parametros) {
               </Form.Select>
             </InputGroup>
             </Card.Title>
-            <Card.Text>
-              <div className={'text-center '+parametros.classLoad}>
-              <img src='../public/loading_2.gif' className='img-fluid'></img>
-              </div>
-            <div className={"table-responsive "+parametros.classTable}>
-              <Table striped bordered hover>
+            <Card.Text className='text-center'>
+            <Row className='mb-3'>
+              <Col lg={{span:4, offset:5}}>
+                <img src='../public/loading_2.gif' className={'img-fluid '+parametros.classLoad}></img>
+              </Col>
+            </Row>
+            
+              <Table responsive striped bordered hover className={parametros.classTable}>
                 <thead>
                     <tr>
                       <th>#</th><th>NOMBRE</th><th>DESCRIPCION</th><th>PRECIO</th><th>CANTIDAD</th><th>IMAGEN</th><th></th>
@@ -74,7 +87,7 @@ function Tabla(parametros) {
                     <td>{row.imagen}</td>
                     <td>
                       <Button className='me-2 mb-1' variant="info" 
-                      onClick={()=>mostrar_alerta(row.nombre,'info',('<i>'+row.descripcion+'</i><br> <b>$'+row.precio+'</b><br><b>'+row.cantidad+'</b> disponilbes <br>'+' Categoría: <b>'+row.categoria+'</b>'))}>
+                      onClick={()=>mostrar_alerta(row.nombre,'info',('<i>'+row.descripcion+'</i><br> <b>$'+row.precio+'</b><br><b>'+row.cantidad+'</b> disponilbes <br>'+' Categoría: <b>'+row.categoria+'</b><br><b>Ingredientes:</b>'+filtrarIngredientres(row.ingredientes)))}>
                         <i className='fa-solid fa-eye'></i></Button>                    
                       <Button className='me-2 mb-1' variant="warning" onClick={()=>parametros.modal(2,row)}> <i className='fa-solid fa-edit'></i></Button>
                       <Button className='me-2 mb-1' variant="danger" onClick={()=>parametros.confirmar(row.id,row.nombre)}> <i className='fa-solid fa-trash'></i></Button>
@@ -83,7 +96,6 @@ function Tabla(parametros) {
                 ))}
                 </tbody>
           </Table>
-        </div>
         </Card.Text>
       </Card.Body>
     </Card>
