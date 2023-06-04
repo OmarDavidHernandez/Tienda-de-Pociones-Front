@@ -1,0 +1,8 @@
+body{
+  background-image: url('../public/fondo2.jpg');
+  background-repeat: no-repeat ;
+  background-size: cover;
+}
+.salto:hover{
+  transform: translateY(-4px) scale(1.01) !important;
+}
